@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -45,7 +46,8 @@ public class PhotoGalleryFragment extends Fragment{
         super.onCreate(savedInstanceState);
         setRetainInstance(true); //屏幕旋转时存储数据
         setHasOptionsMenu(true);
-        new FecthItemTask().execute(); //执行AsyncTask
+        updateItem();
+//        new FecthItemTask().execute(); //执行AsyncTask
 
         Handler resposeHandler = new Handler();
         mThumbnailDownloader = new ThumbnailDownloader<>(resposeHandler);
@@ -58,7 +60,7 @@ public class PhotoGalleryFragment extends Fragment{
         });
         mThumbnailDownloader.start(); //开启线程
         //获取消息泵，从MessageQueue不断抽取Message执行
-        //因此，一个MessageQueue需要一个Looper
+        //因此，一个MessageQueue需要一个Looper9
         mThumbnailDownloader.getLooper();
         Log.i(TAG, "Background thread started");
     }
@@ -217,7 +219,33 @@ public class PhotoGalleryFragment extends Fragment{
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        //加载menu布局
         inflater.inflate(R.menu.fragment_photo_gallery,menu);
+        //获取menu中的item
+        MenuItem searchItem = menu.findItem(R.id.menu_item_search);
+        //通过item获取SearchView
+        final SearchView searchView = (SearchView) searchItem.getActionView();
+        //设置监听
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            //用户提交的时候，回调该方法
+            //返回true表示系统已经处理请求
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d(TAG, "QueryTextSubmit: " + query);
+                updateItem();
+                return true;
+            }
+            //搜索框文本改变的时候，回调此方法
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Log.d(TAG, "QueryTextChange: " + newText);
+                return false;
+            }
+        });
+    }
+
+    private void updateItem() {
+        new FecthItemTask().execute();
     }
 
     @Override
