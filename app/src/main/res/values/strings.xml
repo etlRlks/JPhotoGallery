@@ -1,5 +1,17 @@
 <resources>
-    <string name="app_name">PhotoGallery</string>
+    <string name="app_name">看见</string>
+    <string name="label">看见</string>
+    <string name="drawer_open">drawer_open</string>
+    <string name="drawer_close">drawer_close</string>
     <string name="search">Search</string>
     <string name="clear_search">Clear</string>
+    <string name="start_polling">Start polling</string>
+    <string name="stop_polling">Stop polling</string>
+    <string name="new_picture_title">New PhotoGallery Picture</string>
+    <string name="new_picture_text">You hava New PhotoGallery Picture</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>
