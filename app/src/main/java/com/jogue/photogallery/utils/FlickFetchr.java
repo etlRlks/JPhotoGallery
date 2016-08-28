@@ -1,4 +1,4 @@
-package com.jogue.photogallery;
+package com.jogue.photogallery.utils;
 
 import android.net.Uri;
 import android.util.Log;
@@ -10,6 +10,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.jogue.photogallery.bean.GalleryItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,6 +44,21 @@ public class FlickFetchr {
             .appendQueryParameter("nojsoncallback", "1")
             .appendQueryParameter("extras", "url_s")
             .build();
+
+    /*OkHttpClient mOkHttpClient = new OkHttpClient();
+    String post(String url, String json) throws IOException {
+        FormBody formBody = new FormBody.Builder()
+                .add("api_key", API_KEY)
+                .add("format", "json")
+                .add("nojsoncallback", "1")
+                .add("extras", "url_s")
+                .build();
+        Request request = new Request.Builder()
+                .url("https://api.flickr.com/services/rest")
+                .post(formBody)
+                .build();
+        Response response = mOkHttpClient.newCall(request).execute();
+    }*/
 
 
     public byte[] getUrlBytes(String urlSpec) throws IOException {
@@ -93,15 +109,6 @@ public class FlickFetchr {
     private List<GalleryItem> downloadGalleryItems(String url) {
         List<GalleryItem> items = new ArrayList<>();
         try {
-            /*String url = Uri.parse("https://api.flickr.com/services/rest")
-                    .buildUpon()
-                    .appendQueryParameter("method", "flickr.photos.getRecent")
-                    .appendQueryParameter("api_key", API_KEY)
-                    .appendQueryParameter("format", "json")
-                    .appendQueryParameter("nojsoncallback", "1")
-                    .appendQueryParameter("extras", "url_s")
-                    .appendQueryParameter("page", Integer.toString(page))
-                    .build().toString();*/
             String jsonString = getUrlString(url);
             Log.i(TAG, "Received JSON: " + jsonString);
             JSONObject jsonBody = new JSONObject(jsonString);
@@ -143,6 +150,7 @@ public class FlickFetchr {
                 continue;
             }
             item.setUrl(photoJsonObject.getString("url_s"));
+            item.setOwner(photoJsonObject.getString("owner"));
             items.add(item);
         }
     }
